@@ -1,7 +1,9 @@
+const mysql = require('mysql');
+
 function sanitizeQuery(strings, ...keys) {
     return strings.reduce((query, str, i) => {
         const key = keys[i] || '';
-        query += `${str}${key}`;
+        query += `${str}${mysql.escape(key)}`;
         return query;
     }, '');
 }
