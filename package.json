@@ -1,0 +1,25 @@
+{
+    "name": "crypto-monitor",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "source ./config/dev-env.sh && node index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/jasonhero/crypto-monitor.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/jasonhero/crypto-monitor/issues"
+    },
+    "homepage": "https://github.com/jasonhero/crypto-monitor#readme",
+    "dependencies": {
+        "body-parser": "^1.18.2",
+        "express": "^4.15.4",
+        "mysql": "^2.14.1"
+    }
+}
