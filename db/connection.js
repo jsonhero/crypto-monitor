@@ -1,17 +1,13 @@
-const mysql = require('mysql');
+const knex = require('knex');
+const knexConfig = require('../knexfile');
 
 let connectionInstance = null;
 
-module.exports = () => {
+module.exports = (function() {
     if (connectionInstance) {
         return connectionInstance;
     }
-    connectionInstance = mysql.createConnection({
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASS,
-        database: process.env.DB_NAME,
-    });
+    connectionInstance = knex(knexConfig);
 
     return connectionInstance;
-};
+})();

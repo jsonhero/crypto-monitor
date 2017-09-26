@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 
 app.use(bodyParser.json());
-app.use('/api', require('./routes/ticker'));
+app.use('/api', require('./routes/currency'));
 
 const server = http.createServer(app);
 
