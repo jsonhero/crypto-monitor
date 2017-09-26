@@ -1,5 +1,5 @@
 import * as knex from "knex";
-import knexConfig = require("../knexfile");
+import knexConfig = require("../../knexfile");
 
 let connectionInstance = undefined;
 

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const connection_1 = require("../connection");
-const TABLE_NAME = 'currencies';
+const TABLE_NAME = "currencies";
 class Currency {
     constructor(row) {
         this.fields = () => ({

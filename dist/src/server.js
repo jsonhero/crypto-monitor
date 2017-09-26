@@ -4,10 +4,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const http = require("http");
 const app = express();
+const currency_1 = require("./routes/currency");
 app.use(bodyParser.json());
-app.use('/api', require('./routes/currency'));
+app.use("/api", currency_1.default);
 const server = http.createServer(app);
-server.on('listening', () => {
+server.on("listening", () => {
     const address = server.address();
     console.log(address);
     console.log(`🌎 Server Running -> ${address.address} ${address.port}`);

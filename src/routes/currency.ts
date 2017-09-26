@@ -1,5 +1,5 @@
 import { Response, Request, Router } from "express";
-import currency from "../../db/models/currency";
+import currency from "../db/models/currency";
 
 const router = Router();
 

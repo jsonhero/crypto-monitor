@@ -12,11 +12,11 @@ module.exports = {
     //   max: 8,
     // }
     migrations: {
-        directory: './db/migrations',
+        directory: './src/db/migrations',
         tableName: 'knex_migrations',
     },
     seeds: {
-        directory: './db/seeds',
+        directory: './src/db/seeds',
     },
 };
 //# sourceMappingURL=knexfile.js.map

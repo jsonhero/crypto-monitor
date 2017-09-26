@@ -9,11 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const currency_1 = require("../../db/models/currency");
+const currency_1 = require("../db/models/currency");
 const router = express_1.Router();
-router.get('/currency', (req, res) => __awaiter(this, void 0, void 0, function* () {
+router.get("/currency", (req, res) => __awaiter(this, void 0, void 0, function* () {
     const fields = yield currency_1.default.read();
     res.json(fields);
 }));
-module.exports = router;
+exports.default = router;
 //# sourceMappingURL=currency.js.map
