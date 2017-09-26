@@ -2,10 +2,16 @@ import db from "../connection";
 
 const TABLE_NAME = "currencies";
 
+interface CurrencyFields {
+    id: string;
+    currency: string;
+    display_name: string;
+}
+
 class Currency {
     fields: any;
     constructor(row: any) {
-        this.fields = () => ({
+        this.fields = (): CurrencyFields => ({
             id: row.id,
             currency: row.currency,
             display_name: row.display_name,
