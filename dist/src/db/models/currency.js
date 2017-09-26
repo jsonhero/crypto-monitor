@@ -30,7 +30,7 @@ class Currency {
     static read() {
         return __awaiter(this, void 0, void 0, function* () {
             const results = yield connection_1.default.select().from(TABLE_NAME);
-            return results;
+            return results.map((row) => new Currency(row));
         });
     }
 }

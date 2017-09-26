@@ -1,11 +1,11 @@
 import { Response, Request, Router } from "express";
-import currency from "../db/models/currency";
+import Currency from "../db/models/currency";
 
 const router = Router();
 
 router.get("/currency", async(req: Request, res: Response) => {
-    const fields = await currency.read();
-    res.json(fields);
+    const results = await Currency.read();
+    res.json(results.map((result: Currency) => result.fields()));
 });
 
 export default router;

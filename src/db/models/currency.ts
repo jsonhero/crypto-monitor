@@ -28,7 +28,8 @@ class Currency {
 
     static async read() {
         const results = await db.select().from(TABLE_NAME);
-        return results;
+
+        return results.map((row: any) => new Currency(row));
     }
 }
 

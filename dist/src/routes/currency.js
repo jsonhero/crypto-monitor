@@ -12,8 +12,8 @@ const express_1 = require("express");
 const currency_1 = require("../db/models/currency");
 const router = express_1.Router();
 router.get("/currency", (req, res) => __awaiter(this, void 0, void 0, function* () {
-    const fields = yield currency_1.default.read();
-    res.json(fields);
+    const results = yield currency_1.default.read();
+    res.json(results.map((result) => result.fields()));
 }));
 exports.default = router;
 //# sourceMappingURL=currency.js.map
