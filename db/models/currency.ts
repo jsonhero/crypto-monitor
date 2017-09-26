@@ -1,9 +1,10 @@
-const db = require('../connection');
+import db from "../connection";
 
-const TABLE_NAME = 'currencies';
+const TABLE_NAME = "currencies";
 
 class Currency {
-    constructor(row) {
+    fields: any;
+    constructor(row: any) {
         this.fields = () => ({
             id: row.id,
             currency: row.currency,
@@ -11,7 +12,7 @@ class Currency {
         });
     }
 
-    static async create(input) {
+    static async create(input: any) {
         const result = await db(TABLE_NAME).insert({
             currency: input.currency,
             display_name: input.display_name,
@@ -25,4 +26,4 @@ class Currency {
     }
 }
 
-module.exports = Currency;
+export default Currency;

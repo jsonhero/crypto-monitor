@@ -1,9 +1,9 @@
-const knex = require('knex');
-const knexConfig = require('../knexfile');
+import * as knex from "knex";
+import knexConfig = require("../knexfile");
 
-let connectionInstance = null;
+let connectionInstance = undefined;
 
-module.exports = (function() {
+export default (function() {
     if (connectionInstance) {
         return connectionInstance;
     }

@@ -1,18 +1,21 @@
-const bodyParser = require('body-parser');
-const http = require('http');
-const express = require('express');
+import * as express from "express";
+import * as bodyParser from "body-parser";
+import * as http from "http";
+
 const app = express();
 
+import currencyAPI from "./routes/currency";
+
 app.use(bodyParser.json());
-app.use('/api', require('./routes/currency'));
+app.use("/api", currencyAPI);
 
 const server = http.createServer(app);
 
 
-server.on('listening', () => {
+server.on("listening", () => {
     const address = server.address();
     console.log(address);
     console.log(`🌎 Server Running -> ${address.address} ${address.port}`);
-})
+});
 
 server.listen(3000);
