@@ -1,7 +1,7 @@
 import db from "../connection";
 import { DBModel } from "../../types/model-types";
 
-const TABLE_NAME = "main_ticker";
+export const MAIN_TICKER_TABLE = "main_ticker";
 
 interface MainTickerFields {
     id: string;
@@ -45,7 +45,7 @@ class MainTicker implements DBModel {
     }
 
     public static async create(input: MainTickerInput): Promise<any> {
-        const result = await db(TABLE_NAME).insert({
+        const result = await db(MAIN_TICKER_TABLE).insert({
             symbol: input.symbol,
             price: input.price,
             volume: input.volume,
@@ -56,8 +56,8 @@ class MainTicker implements DBModel {
         return result;
     }
 
-    public static async read(args: MainTickerArgs): Promise<Array<MainTicker>> {
-        const results = await db.select().from(TABLE_NAME);
+    public static async read(args?: MainTickerArgs): Promise<Array<MainTicker>> {
+        const results = await db.select().from(MAIN_TICKER_TABLE);
 
         return results.map((row: any) => new MainTicker(row));
     }

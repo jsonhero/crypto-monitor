@@ -9,30 +9,30 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const connection_1 = require("../connection");
-exports.CURRENCY_TABLE = "currencies";
-class Currency {
+exports.EXCHANGE_TABLE = "exchanges";
+class Exchange {
     constructor(row) {
         this.fields = () => ({
             id: row.id,
-            currency: row.currency,
-            display_name: row.display_name,
+            name: row.name,
+            web_url: row.web_url,
         });
     }
     static create(input) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield connection_1.default(exports.CURRENCY_TABLE).insert({
-                currency: input.currency,
-                display_name: input.display_name,
+            const result = yield connection_1.default(exports.EXCHANGE_TABLE).insert({
+                name: input.name,
+                web_url: input.web_url,
             });
             return result;
         });
     }
     static read(args) {
         return __awaiter(this, void 0, void 0, function* () {
-            const results = yield connection_1.default.select().from(exports.CURRENCY_TABLE);
-            return results.map((row) => new Currency(row));
+            const results = yield connection_1.default.select().from(exports.EXCHANGE_TABLE);
+            return results.map((row) => new Exchange(row));
         });
     }
 }
-exports.default = Currency;
-//# sourceMappingURL=currency.js.map
+exports.default = Exchange;
+//# sourceMappingURL=exchange.js.map

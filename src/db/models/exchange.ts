@@ -1,7 +1,7 @@
 import db from "../connection";
 import { DBModel } from "../../types/model-types";
 
-const TABLE_NAME = "exchanges";
+export const EXCHANGE_TABLE = "exchanges";
 
 interface ExchangeFields {
     id: string;
@@ -29,16 +29,16 @@ class Exchange implements DBModel {
         });
     }
 
-    public static async create(input: any): Promise<any> {
-        const result = await db(TABLE_NAME).insert({
-            currency: input.currency,
-            display_name: input.display_name,
+    public static async create(input: ExchangeInput): Promise<any> {
+        const result = await db(EXCHANGE_TABLE).insert({
+            name: input.name,
+            web_url: input.web_url,
         });
         return result;
     }
 
-    public static async read(args: ExchangeArgs): Promise<Array<Exchange>> {
-        const results = await db.select().from(TABLE_NAME);
+    public static async read(args?: ExchangeArgs): Promise<Array<Exchange>> {
+        const results = await db.select().from(EXCHANGE_TABLE);
 
         return results.map((row: any) => new Exchange(row));
     }

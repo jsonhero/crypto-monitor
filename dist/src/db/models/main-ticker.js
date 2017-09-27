@@ -9,30 +9,38 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const connection_1 = require("../connection");
-exports.CURRENCY_TABLE = "currencies";
-class Currency {
+exports.MAIN_TICKER_TABLE = "main_ticker";
+class MainTicker {
     constructor(row) {
         this.fields = () => ({
             id: row.id,
+            symbol: row.symbol,
+            price: row.price,
+            volume: row.volume,
+            high: row.high,
+            low: row.low,
             currency: row.currency,
-            display_name: row.display_name,
         });
     }
     static create(input) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield connection_1.default(exports.CURRENCY_TABLE).insert({
-                currency: input.currency,
-                display_name: input.display_name,
+            const result = yield connection_1.default(exports.MAIN_TICKER_TABLE).insert({
+                symbol: input.symbol,
+                price: input.price,
+                volume: input.volume,
+                high: input.high,
+                low: input.low,
+                currency_id: input.currency_id,
             });
             return result;
         });
     }
     static read(args) {
         return __awaiter(this, void 0, void 0, function* () {
-            const results = yield connection_1.default.select().from(exports.CURRENCY_TABLE);
-            return results.map((row) => new Currency(row));
+            const results = yield connection_1.default.select().from(exports.MAIN_TICKER_TABLE);
+            return results.map((row) => new MainTicker(row));
         });
     }
 }
-exports.default = Currency;
-//# sourceMappingURL=currency.js.map
+exports.default = MainTicker;
+//# sourceMappingURL=main-ticker.js.map
