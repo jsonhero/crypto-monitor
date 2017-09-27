@@ -1,4 +1,5 @@
 import db from "../connection";
+import { DBModel } from "../../types/model-types";
 
 const TABLE_NAME = "currencies";
 
@@ -8,7 +9,17 @@ interface CurrencyFields {
     display_name: string;
 }
 
-class Currency {
+
+interface CurrencyArgs {
+    name: string;
+}
+
+interface CurrencyInput {
+    currency: string;
+    display_name: string;
+}
+
+class Currency implements DBModel {
     fields: any;
     constructor(row: any) {
         this.fields = (): CurrencyFields => ({
@@ -18,7 +29,7 @@ class Currency {
         });
     }
 
-    static async create(input: any) {
+    public static async create(input: CurrencyInput): Promise<any> {
         const result = await db(TABLE_NAME).insert({
             currency: input.currency,
             display_name: input.display_name,
@@ -26,7 +37,7 @@ class Currency {
         return result;
     }
 
-    static async read() {
+    public static async read(args: CurrencyArgs): Promise<Array<Currency>> {
         const results = await db.select().from(TABLE_NAME);
 
         return results.map((row: any) => new Currency(row));
