@@ -2,6 +2,7 @@ const TABLE_NAME = 'exchange_ticker';
 
 exports.up = function(knex) {
     return knex.schema.createTable(TABLE_NAME, (table) => {
+        table.bigIncrements();
         // foreign links
         table.integer('exchange_id').unsigned().references('exchanges.id');
         table.integer('currency_id').unsigned().references('currencies.id');
@@ -11,7 +12,8 @@ exports.up = function(knex) {
         table.float('volume');
         table.float('high');
         table.float('low');
-        table.string('symbol', 32);
+        table.string('quote_currency', 32);
+
 
         table.timestamp('created_at').defaultTo(knex.fn.now());
         table.timestamp('updated_at').defaultTo(knex.raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
@@ -21,3 +23,12 @@ exports.up = function(knex) {
 exports.down = function(knex) {
     return knex.schema.dropTable(TABLE_NAME);
 };
+
+
+/*
+quote_currency_id
+price
+volume
+high
+low
+*/

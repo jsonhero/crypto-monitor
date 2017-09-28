@@ -12,7 +12,7 @@ exports.up = function(knex) {
         table.float('volume');
         table.float('high');
         table.float('low');
-        table.string('symbol', 32);
+        table.string('currency', 32);
 
         table.timestamp('created_at').defaultTo(knex.fn.now());
         table.timestamp('updated_at').defaultTo(knex.raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
