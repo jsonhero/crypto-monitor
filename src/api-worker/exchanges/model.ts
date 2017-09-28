@@ -22,29 +22,34 @@ export class Exchange {
     this.currencies = [];
   }
 
-  getTickerURL(currency_id: string): string {
-    const url = new URL(`${this.api_url}/ticker/${currency_id}`);
+  public getApiUrl(): string {
+    return this.api_url;
+  }
+
+  public getTickerUrl(currency_id: string): string {
+    const url = new URL(`${this.getApiUrl()}/ticker/${currency_id}`);
     return url.toString();
   }
 
-  async retrieveTicker(currency_id: string) {
-    await this.fetchData(this.getTickerURL(currency_id));
+  public async retrieveTicker(currency_id: string) {
+    const tickerResult = await this.fetchData(this.getTickerUrl(currency_id));
+    return this.normalizeTickerResult(tickerResult);
   }
 
-  normalizeTickerResult(data: any) {
+  public normalizeTickerResult(data: any) {
     return data;
   }
 
-  async fetchData(url: string) {
+  private async fetchData(url: string) {
     const result = await axios.get(url);
     return result;
   }
 
-  addCurrency(base_currency_id: string, exchange_currency_id: string): void {
+  public addCurrency(base_currency_id: string, exchange_currency_id: string): void {
     this.currencies.push(new ExchangeCurrency(this.exchange_name, base_currency_id, exchange_currency_id));
   }
 
-  getCurrencies(): Array<ExchangeCurrency> {
+  public getCurrencies(): Array<ExchangeCurrency> {
     return this.currencies;
   }
 }

@@ -3,8 +3,9 @@ import * as currencies from "../currencies";
 
 class CoinbaseExchange extends Exchange {
 
-  getTickerURL(currency_id: string): string {
-    return "";
+  getTickerUrl(currency_id: string): string {
+    const url = new URL(`${this.getApiUrl()}/products/${currency_id}/ticker`);
+    return url.toString();
   }
 
   normalizeTickerResult(data: any) {

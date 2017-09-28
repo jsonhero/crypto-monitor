@@ -26,7 +26,7 @@ interface ExchangeTickerArgs {
   symbol: string;
 }
 
-interface ExchangeTickerInput {
+export interface ExchangeTickerInput {
   symbol: string;
   price: number;
   volume: number;

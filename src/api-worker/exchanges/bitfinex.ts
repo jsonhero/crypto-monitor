@@ -7,7 +7,7 @@ class BitfinexExchange extends Exchange {
     return "";
   }
 
-  normalizeTickerResult(data: any) {
+  public normalizeTickerResult(data: any) {
     return {
 
     };
