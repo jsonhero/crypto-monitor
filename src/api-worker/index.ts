@@ -1,13 +1,20 @@
 import { Exchange } from "./exchanges/model";
-// import exchanges from "./exchanges";
+import listedExchanges from "./exchanges";
 
-const exchangePollInterval = 5000;
+const exchangePollTimeout = 5000;
 
 async function runWorker(exchanges: Array<Exchange>) {
   exchanges.forEach((exchange: Exchange) => {
-    setInterval(async () => {
-      await exchange.retrieveTicker();
-    }, exchangePollInterval);
+    const currencies = exchange.getCurrencies();
+    currencies.forEach((currency) => {
+      const tickerRequester = async (_currency: any, _exchange: any) => {
+        await _exchange.retrieveTicker(_currency.getExchangeCurrency());
+        setTimeout(() => tickerRequester(_currency, _exchange), exchangePollTimeout);
+      };
+      tickerRequester(currency, exchange);
+    });
   });
 }
 
+
+runWorker(listedExchanges);

@@ -1,3 +1,4 @@
+// import URL from "url";
 import axios from "axios";
 
 export class ExchangeCurrency {
@@ -9,6 +10,19 @@ export class ExchangeCurrency {
     this.exchange_currency_id = exchange_currency_id;
     this.base_currency_id = base_currency_id;
   }
+
+  getExchangeName(): string {
+    return this.exchange_name;
+  }
+
+  getExchangeCurrency(): string {
+    return this.exchange_currency_id;
+  }
+
+  getBaseCurrency(): string {
+    return this.base_currency_id;
+  }
+
 }
 
 
@@ -27,13 +41,13 @@ export class Exchange {
   }
 
   public getTickerUrl(currency_id: string): string {
-    const url = new URL(`${this.getApiUrl()}/ticker/${currency_id}`);
+    const url = `${this.getApiUrl()}/ticker/${currency_id}`;
     return url.toString();
   }
 
   public async retrieveTicker(currency_id: string) {
-    const tickerResult = await this.fetchData(this.getTickerUrl(currency_id));
-    return this.normalizeTickerResult(tickerResult);
+    const tickerResponse = await this.fetchData(this.getTickerUrl(currency_id));
+    return this.normalizeTickerResult(tickerResponse.data);
   }
 
   public normalizeTickerResult(data: any) {

@@ -1,14 +1,16 @@
-import { Exchange, ExchangeCurrency } from "./model";
+// import URL from "url";
+import { Exchange } from "./model";
 import * as currencies from "../currencies";
 
 class CoinbaseExchange extends Exchange {
 
   getTickerUrl(currency_id: string): string {
-    const url = new URL(`${this.getApiUrl()}/products/${currency_id}/ticker`);
+    const url = `${this.getApiUrl()}/products/${currency_id}/ticker`;
     return url.toString();
   }
 
   normalizeTickerResult(data: any) {
+    console.log(data, "d");
     return {
 
     };

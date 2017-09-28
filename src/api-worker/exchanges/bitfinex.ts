@@ -1,4 +1,4 @@
-import { Exchange, ExchangeCurrency } from "./model";
+import { Exchange } from "./model";
 import * as currencies from "../currencies";
 
 class BitfinexExchange extends Exchange {
