@@ -30,6 +30,7 @@
         "body-parser": "^1.18.2",
         "express": "^4.15.4",
         "knex": "^0.13.0",
+        "lodash": "^4.17.4",
         "mysql": "^2.14.1"
     },
     "devDependencies": {

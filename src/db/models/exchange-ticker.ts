@@ -26,16 +26,46 @@ interface ExchangeTickerArgs {
   symbol: string;
 }
 
-export interface ExchangeTickerInput {
-  symbol: string;
-  price: number;
-  volume: number;
-  high: number;
-  low: number;
-  // foreign key relations
-  currency_id: number;
-  exchange_id: number;
+export class ExchangeTickerInput {
+    quote_currency: string;
+    price: number;
+    volume: number;
+    high: number;
+    low: number;
+    constructor() {
+        this.quote_currency = undefined;
+        this.price = undefined;
+        this.volume = undefined;
+        this.high = undefined;
+        this.low = undefined;
+    }
+    setQuoteCurrency(quote_currency: string) {
+        this.quote_currency = quote_currency;
+    }
+    setPrice(price: number) {
+        this.price = price;
+    }
+    setVolume(volume: number) {
+        this.volume = volume;
+    }
+    setHigh(high: number) {
+        this.high = high;
+    }
+    setLow(low: number) {
+        this.low = low;
+    }
 }
+
+// export interface ExchangeTickerInput {
+//   symbol: string;
+//   price: number;
+//   volume: number;
+//   high: number;
+//   low: number;
+//   // foreign key relations
+//   currency_id: number;
+//   exchange_id: number;
+// }
 
 class ExchangeTicker implements DBModel {
     fields: any;
@@ -56,7 +86,7 @@ class ExchangeTicker implements DBModel {
 
     public static async create(input: ExchangeTickerInput): Promise<any> {
         const result = await db(EXCHANGE_TICKER_TABLE).insert({
-            symbol: input.symbol,
+            quote_currency: input.quote_currency,
             price: input.price,
             volume: input.volume,
             high: input.high,

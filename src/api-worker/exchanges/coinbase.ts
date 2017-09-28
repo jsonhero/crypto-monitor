@@ -1,4 +1,6 @@
 // import URL from "url";
+import * as _ from "lodash";
+import { ExchangeTickerInput } from "../../db/models/exchange-ticker";
 import { Exchange } from "./model";
 import * as currencies from "../currencies";
 
@@ -9,11 +11,11 @@ class CoinbaseExchange extends Exchange {
     return url.toString();
   }
 
-  normalizeTickerResult(data: any) {
-    console.log(data, "d");
-    return {
-
-    };
+  normalizeTickerResult(data: any): ExchangeTickerInput {
+    const input = new ExchangeTickerInput();
+    input.setPrice(_.get(data, "price"));
+    input.setVolume(_.get(data, "volume"));
+    return input;
   }
 }
 
@@ -24,3 +26,8 @@ Coinbase.addCurrency(currencies.ETH_USD, "ETH-USD");
 
 
 export default Coinbase;
+
+
+function validateAndConvert() {
+
+}
