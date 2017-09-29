@@ -1,4 +1,4 @@
-const TABLE_NAME = "exchanges";
+const TABLE_NAME = "market";
 
 exports.seed = function(knex, Promise) {
     // Deletes ALL existing entries
@@ -6,8 +6,8 @@ exports.seed = function(knex, Promise) {
         .then(function() {
             // Inserts seed entries
             return knex(TABLE_NAME).insert([
-                { name: "Coinbase", web_url: "https://www.coinbase.com/" },
-                { name: "Poloniex", web_url: "https://poloniex.com/" },
+                { market_name: "Coinbase", url: "https://www.coinbase.com/" },
+                { market_name: "Poloniex", url: "https://poloniex.com/" },
             ]);
         });
 };

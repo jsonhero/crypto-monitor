@@ -1,5 +1,8 @@
 # crypto-monitor
 
+Schema:
+![test](https://i.gyazo.com/26bd7b6849cd7ac3414bcfa4a5be3c21.png)
+
 ## WIP
 
 Supported Markets

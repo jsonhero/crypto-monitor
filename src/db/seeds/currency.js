@@ -1,4 +1,4 @@
-const TABLE_NAME = "currencies";
+const TABLE_NAME = "currency";
 
 
 exports.seed = function(knex, Promise) {
@@ -7,8 +7,9 @@ exports.seed = function(knex, Promise) {
         .then(function() {
             // Inserts seed entries
             return knex(TABLE_NAME).insert([
-                { currency: "BTC", display_name: "Bitcoin" },
-                { currency: "ETH", display_name: "Ethereum" },
+                { currency_name: "BTC", display_name: "Bitcoin" },
+                { currency_name: "ETH", display_name: "Ethereum" },
+                { currency_name: "LTC", display_name: "Litecoin" },
             ]);
         });
 };
