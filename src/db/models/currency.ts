@@ -1,7 +1,7 @@
 import db from "../connection";
 import { DBModel } from "../../types/model-types";
 
-export const CURRENCY_TABLE = "currencies";
+export const CURRENCY_TABLE = "currency";
 
 interface CurrencyFields {
     id: string;

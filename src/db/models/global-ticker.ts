@@ -1,26 +1,24 @@
 import db from "../connection";
 import { DBModel } from "../../types/model-types";
 
-export const MAIN_TICKER_TABLE = "main_ticker";
+export const GLOBAL_TICKER_TABLE = "global_ticker";
 
-interface MainTickerFields {
+interface GlobalTickerFields {
     id: string;
     symbol: string;
     price: number;
     volume: number;
     high: number;
     low: number;
-    // 'currency' table JOIN fields
-    currency: string;
 }
 
 
-interface MainTickerArgs {
+interface GlobalTickerArgs {
     currency: string;
     symbol: string;
 }
 
-interface MainTickerInput {
+interface GlobalTickerInput {
   symbol: string;
   price: number;
   volume: number;
@@ -30,22 +28,21 @@ interface MainTickerInput {
   currency_id: number;
 }
 
-class MainTicker implements DBModel {
+class GlobalTicker implements DBModel {
     fields: any;
     constructor(row: any) {
-        this.fields = (): MainTickerFields => ({
+        this.fields = (): GlobalTickerFields => ({
             id: row.id,
             symbol: row.symbol,
             price: row.price,
             volume: row.volume,
             high: row.high,
             low: row.low,
-            currency: row.currency,
         });
     }
 
-    public static async create(input: MainTickerInput): Promise<any> {
-        const result = await db(MAIN_TICKER_TABLE).insert({
+    public static async create(input: GlobalTickerInput): Promise<any> {
+        const result = await db(GLOBAL_TICKER_TABLE).insert({
             symbol: input.symbol,
             price: input.price,
             volume: input.volume,
@@ -56,11 +53,11 @@ class MainTicker implements DBModel {
         return result;
     }
 
-    public static async read(args?: MainTickerArgs): Promise<Array<MainTicker>> {
-        const results = await db.select().from(MAIN_TICKER_TABLE);
+    public static async read(args?: GlobalTickerArgs): Promise<Array<GlobalTicker>> {
+        const results = await db.select().from(GLOBAL_TICKER_TABLE);
 
-        return results.map((row: any) => new MainTicker(row));
+        return results.map((row: any) => new GlobalTicker(row));
     }
 }
 
-export default MainTicker;
+export default GlobalTicker;

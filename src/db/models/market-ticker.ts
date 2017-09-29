@@ -1,32 +1,28 @@
 import db from "../connection";
 import { DBModel } from "../../types/model-types";
-import { EXCHANGE_TABLE } from "./exchange";
+import { MARKET_TABLE } from "./Market";
 import { CURRENCY_TABLE } from "./currency";
 
-export const EXCHANGE_TICKER_TABLE = "exchange_ticker";
+export const MARKET_TICKER_TABLE = "Market_ticker";
 
-interface ExchangeTickerFields {
-  // 'exchange_ticker' table fields
+interface MarketTickerFields {
+  // 'Market_ticker' table fields
   id: string;
   symbol: string;
   price: number;
   volume: number;
   high: number;
   low: number;
-  // 'exchange' table JOIN fields
-  exchange: string;
-  // 'currency' table JOIN fields
-  currency: string;
 }
 
 
-interface ExchangeTickerArgs {
-  exchange: string;
+interface MarketTickerArgs {
+  Market: string;
   currency: string;
   symbol: string;
 }
 
-export class ExchangeTickerInput {
+export class MarketTickerInput {
     quote_currency: string;
     price: number;
     volume: number;
@@ -56,7 +52,7 @@ export class ExchangeTickerInput {
     }
 }
 
-// export interface ExchangeTickerInput {
+// export interface MarketTickerInput {
 //   symbol: string;
 //   price: number;
 //   volume: number;
@@ -64,13 +60,13 @@ export class ExchangeTickerInput {
 //   low: number;
 //   // foreign key relations
 //   currency_id: number;
-//   exchange_id: number;
+//   Market_id: number;
 // }
 
-class ExchangeTicker implements DBModel {
+class MarketTicker implements DBModel {
     fields: any;
     constructor(row: any) {
-        this.fields = (): ExchangeTickerFields => ({
+        this.fields = (): MarketTickerFields => ({
             // native fields
             id: row.id,
             symbol: row.symbol,
@@ -78,14 +74,11 @@ class ExchangeTicker implements DBModel {
             volume: row.price,
             high: row.high,
             low: row.low,
-            // from JOINS fields
-            currency: row.currency,
-            exchange: row.exchange,
         });
     }
 
-    public static async create(input: ExchangeTickerInput): Promise<any> {
-        const result = await db(EXCHANGE_TICKER_TABLE).insert({
+    public static async create(input: MarketTickerInput): Promise<any> {
+        const result = await db(MARKET_TICKER_TABLE).insert({
             quote_currency: input.quote_currency,
             price: input.price,
             volume: input.volume,
@@ -95,14 +88,14 @@ class ExchangeTicker implements DBModel {
         return result;
     }
 
-    public static async read(args?: ExchangeTickerArgs): Promise<Array<ExchangeTicker>> {
-        const results = await db.select(`${EXCHANGE_TICKER_TABLE}.*`, `${EXCHANGE_TABLE}.name AS exchange`, `${CURRENCY_TABLE}.currency`)
-            .from(EXCHANGE_TICKER_TABLE)
-            .leftJoin(EXCHANGE_TABLE, `${EXCHANGE_TICKER_TABLE}.exchange_id`, `${EXCHANGE_TABLE}.id`)
-            .leftJoin(CURRENCY_TABLE, `${EXCHANGE_TICKER_TABLE}.currency_id`, `${CURRENCY_TABLE}.id`);
+    public static async read(args?: MarketTickerArgs): Promise<Array<MarketTicker>> {
+        const results = await db.select(`${MARKET_TICKER_TABLE}.*`, `${MARKET_TABLE}.name AS Market`, `${CURRENCY_TABLE}.currency`)
+            .from(MARKET_TICKER_TABLE)
+            .leftJoin(MA, `${MARKET_TICKER_TABLE}.Market_id`, `${MARKET_TABLE}.id`)
+            .leftJoin(CURRENCY_TABLE, `${MARKET_TICKER_TABLE}.currency_id`, `${CURRENCY_TABLE}.id`);
 
-        return results.map((row: any) => new ExchangeTicker(row));
+        return results.map((row: any) => new MarketTicker(row));
     }
 }
 
-export default ExchangeTicker;
+export default MarketTicker;
