@@ -12,7 +12,7 @@
         "build-ts": "tsc",
         "watch-ts": "tsc -w",
         "tslint": "tslint -c tslint.json -p tsconfig.json",
-        "migrations:now": "source ./config/dev-env.sh && knex migrate:latest",
+        "migrate": "source ./config/dev-env.sh && sequelize db:migrate --config=config/sequelize.config.js --migrations-path=src/db/migrations --env development",
         "migrations:rollback": "source ./config/dev-env.sh && knex migrate:rollback"
     },
     "repository": {
@@ -28,16 +28,25 @@
     "dependencies": {
         "axios": "^0.16.2",
         "body-parser": "^1.18.2",
+        "epilogue": "^0.7.1",
         "express": "^4.15.4",
-        "knex": "^0.13.0",
         "lodash": "^4.17.4",
-        "mysql": "^2.14.1"
+        "moment": "^2.19.2",
+        "moment-timezone": "^0.5.14",
+        "pg": "^7.4.0",
+        "pg-hstore": "^2.3.2",
+        "reflect-metadata": "^0.1.10",
+        "sequelize": "^4.22.15",
+        "sequelize-cli": "^3.1.0",
+        "sequelize-typescript": "^0.5.0"
     },
     "devDependencies": {
         "@types/axios": "^0.14.0",
         "@types/body-parser": "^1.16.5",
         "@types/express": "^4.0.37",
         "@types/knex": "0.0.61",
+        "@types/moment": "^2.13.0",
+        "@types/moment-timezone": "^0.5.2",
         "@types/node": "^8.0.31",
         "concurrently": "^3.5.0",
         "tslint": "^5.7.0",
