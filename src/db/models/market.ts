@@ -1,9 +1,14 @@
-import { Table, Column, Model, DataType, HasMany, PrimaryKey } from "sequelize-typescript";
+import { Table, Column, Model, DataType, HasMany, AutoIncrement, PrimaryKey } from "sequelize-typescript";
 
 @Table({
   tableName: "market",
 })
 export class Market extends Model<Market> {
+
+  @PrimaryKey
+  @AutoIncrement
+  @Column(DataType.INTEGER)
+  id: number;
 
   @Column(DataType.STRING)
   market_name: string;

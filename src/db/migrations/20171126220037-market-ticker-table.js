@@ -11,7 +11,7 @@ module.exports = {
             market_currency_id: {
                 type: Sequelize.INTEGER,
                 references: {
-                    model: 'market',
+                    model: 'market_currency',
                     key: 'id',
                 },
             },

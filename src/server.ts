@@ -1,12 +1,12 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as http from "http";
-import * as epilogue from "epilogue";
-import dbConnection from "./db/dbConnection";
+
+import restifyModels from "./db/restify-models";
+import dbConnection from "./db/db-connection";
 
 async function runServer() {
   const sequelize = await dbConnection();
-  const { Market, Currency, MarketCurrency } = sequelize.models;
 
   const app = express();
 
@@ -18,26 +18,7 @@ async function runServer() {
     });
   });
 
-  epilogue.initialize({
-    app,
-    sequelize,
-    base: "/api",
-  });
-
-  console.log("testerf", sequelize.models.Currency.rawAttributes);
-
-  epilogue.resource({
-    model: Market,
-    endpoints: ["/market", "/market/:id"],
-  });
-  epilogue.resource({
-    model: Currency,
-    endpoints: ["/currency", "/currency/:id"],
-  });
-  epilogue.resource({
-    model: MarketCurrency,
-    endpoints: ["/market-currency", "/market-currency/:id"],
-  });
+  await restifyModels(sequelize, app);
 
   const server = http.createServer(app);
 
