@@ -1,6 +1,8 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as http from "http";
+// import * as proxy from "http-proxy-middleware";
+import * as cors from "cors";
 
 import restifyModels from "./db/restify-models";
 import dbConnection from "./db/db-connection";
@@ -10,7 +12,13 @@ async function runServer() {
 
   const app = express();
 
+  app.use(cors());
   app.use(bodyParser.json());
+
+  // app.use("/build", proxy({
+  //   target: `http://localhost:3100`,
+  //   changeOrigin: true,
+  // }));
 
   app.get("/healthcheck", (req: express.Request, res: express.Response) => {
     res.json({
@@ -28,7 +36,7 @@ async function runServer() {
       console.log(`🌎 Server Running -> ${address.address} ${address.port}`);
   });
 
-  server.listen(3000);
+  server.listen(process.env.SERVER_PORT || 3000);
 }
 
 runServer();

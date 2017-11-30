@@ -13,16 +13,19 @@ export class MarketCurrency extends Model<MarketCurrency> {
   id: number;
 
   @ForeignKey(() => Market)
-  @Column
+  @Column(DataType.INTEGER)
   market_id: number;
 
   @ForeignKey(() => Currency)
-  @Column
+  @Column(DataType.INTEGER)
   base_currency_id: number;
 
   @ForeignKey(() => Currency)
-  @Column
+  @Column(DataType.INTEGER)
   quote_currency_id: number;
+
+  @Column(DataType.STRING)
+  market_pair: string;
 
   @Column(DataType.DATE)
   created_at: string;
