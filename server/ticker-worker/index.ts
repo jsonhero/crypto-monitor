@@ -62,22 +62,14 @@ class TickerManager {
     this.requesters = this.requesters.filter((requester) => requester.getEndpoint() !== endpoint_url);
   }
 
-  getStaleRequester(minTime: number): TickerRequester {
-    return this.requesters.reduce((oldest, current) => {
-      // Don't check requests in mid-flight or requests that haven't surpassed the minimum time frame
-      const currentTime = current.timeSinceRequest();
-      if (current.currentlyRequesting() || currentTime < minTime) {
-        return oldest;
-      }
-
-      if (!oldest) return current;
-
-      if (currentTime > oldest.timeSinceRequest()) {
-        return current;
-      }
-      return oldest;
-    }, undefined);
+  getAll(): Array<TickerRequester> {
+    return this.requesters;
   }
+
+  clearAll(): void {
+    this.requesters = [];
+  }
+
 }
 
 class TickerRunner {
@@ -106,11 +98,29 @@ class TickerRunner {
     return id;
   }
 
+  getStaleRequester(minTime: number): TickerRequester {
+    const requesters = this.manager.getAll();
+    return requesters.reduce((oldest: any, current: any) => {
+      // Don't check requests in mid-flight or requests that haven't surpassed the minimum time frame
+      const currentTime = current.timeSinceRequest();
+      if (current.currentlyRequesting() || currentTime < minTime) {
+        return oldest;
+      }
+
+      if (!oldest) return current;
+
+      if (currentTime > oldest.timeSinceRequest()) {
+        return current;
+      }
+      return oldest;
+    }, undefined);
+  }
+
   async makeRequest(tickerRequester: TickerRequester) {
     const id = this.openRequest(tickerRequester);
     try {
-      const response = await axios.get(tickerRequester.getEndpoint());
-      console.log(response, "response");
+      const { data } = await axios.get(tickerRequester.getEndpoint());
+      console.log(data, tickerRequester.getEndpoint());
     } catch (e) {
       console.log(e, "Error requesting");
     }
@@ -122,7 +132,7 @@ class TickerRunner {
   start() {
     setTimeout(() => {
       if (this.activeRequests.size < this.maxConcurrentRequests) {
-        const staleRequester = this.manager.getStaleRequester(this.requestRepeatInterval);
+        const staleRequester = this.getStaleRequester(this.requestRepeatInterval);
         if (staleRequester) {
           this.makeRequest(staleRequester);
         }

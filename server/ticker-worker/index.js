@@ -81,20 +81,11 @@ var TickerManager = /** @class */ (function () {
     TickerManager.prototype.removeEndpoint = function (endpoint_url) {
         this.requesters = this.requesters.filter(function (requester) { return requester.getEndpoint() !== endpoint_url; });
     };
-    TickerManager.prototype.getStaleRequester = function (minTime) {
-        return this.requesters.reduce(function (oldest, current) {
-            // Don't check requests in mid-flight or requests that haven't surpassed the minimum time frame
-            var currentTime = current.timeSinceRequest();
-            if (current.currentlyRequesting() || currentTime < minTime) {
-                return oldest;
-            }
-            if (!oldest)
-                return current;
-            if (currentTime > oldest.timeSinceRequest()) {
-                return current;
-            }
-            return oldest;
-        }, undefined);
+    TickerManager.prototype.getAll = function () {
+        return this.requesters;
+    };
+    TickerManager.prototype.clearAll = function () {
+        this.requesters = [];
     };
     return TickerManager;
 }());
@@ -118,9 +109,25 @@ var TickerRunner = /** @class */ (function () {
         this.activeRequests.set(id, tickerRequester);
         return id;
     };
+    TickerRunner.prototype.getStaleRequester = function (minTime) {
+        var requesters = this.manager.getAll();
+        return requesters.reduce(function (oldest, current) {
+            // Don't check requests in mid-flight or requests that haven't surpassed the minimum time frame
+            var currentTime = current.timeSinceRequest();
+            if (current.currentlyRequesting() || currentTime < minTime) {
+                return oldest;
+            }
+            if (!oldest)
+                return current;
+            if (currentTime > oldest.timeSinceRequest()) {
+                return current;
+            }
+            return oldest;
+        }, undefined);
+    };
     TickerRunner.prototype.makeRequest = function (tickerRequester) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, response, e_1;
+            var id, data, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -130,8 +137,8 @@ var TickerRunner = /** @class */ (function () {
                         _a.trys.push([1, 3, 4, 5]);
                         return [4 /*yield*/, axios_1["default"].get(tickerRequester.getEndpoint())];
                     case 2:
-                        response = _a.sent();
-                        console.log(response, "response");
+                        data = (_a.sent()).data;
+                        console.log(data, tickerRequester.getEndpoint());
                         return [3 /*break*/, 5];
                     case 3:
                         e_1 = _a.sent();
@@ -149,7 +156,7 @@ var TickerRunner = /** @class */ (function () {
         var _this = this;
         setTimeout(function () {
             if (_this.activeRequests.size < _this.maxConcurrentRequests) {
-                var staleRequester = _this.manager.getStaleRequester(_this.requestRepeatInterval);
+                var staleRequester = _this.getStaleRequester(_this.requestRepeatInterval);
                 if (staleRequester) {
                     _this.makeRequest(staleRequester);
                 }
@@ -167,6 +174,18 @@ function runner() {
             tickerManager.addEndpoint("https://api.gdax.com/products/BTC-USD/ticker");
             tickerRunner = new TickerRunner(tickerManager);
             tickerRunner.start();
+            setTimeout(function () {
+                tickerManager.addEndpoint("https://api.gdax.com/products/ETH-USD/ticker");
+            }, 7000);
+            setTimeout(function () {
+                tickerManager.removeEndpoint("https://api.gdax.com/products/BTC-USD/ticker");
+            }, 14000);
+            setTimeout(function () {
+                tickerManager.removeEndpoint("https://api.gdax.com/products/ETH-USD/ticker");
+            }, 20000);
+            setTimeout(function () {
+                tickerManager.addEndpoint("https://api.gdax.com/products/LTC-USD/ticker");
+            }, 25000);
             return [2 /*return*/];
         });
     });
