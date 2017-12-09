@@ -19,6 +19,14 @@ module.exports = {
                 allowNull: true,
                 defaultValue: null,
             },
+            api_path: {
+                type: Sequelize.STRING,
+                defaultValue: null,
+            },
+            api_translation: {
+                type: Sequelize.TEXT,
+                defaultValue: null,
+            },
             created_at: {
                 type: 'TIMESTAMP',
                 defaultValue: Sequelize.fn('NOW'),

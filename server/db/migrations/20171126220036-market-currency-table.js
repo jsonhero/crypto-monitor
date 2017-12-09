@@ -29,11 +29,6 @@ module.exports = {
                     key: 'id',
                 },
             },
-            market_pair: {
-                type: Sequelize.STRING,
-                allowNull: true,
-                defaultValue: null,
-            },
             created_at: {
                 type: 'TIMESTAMP',
                 defaultValue: Sequelize.fn('NOW'),

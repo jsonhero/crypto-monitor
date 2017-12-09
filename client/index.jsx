@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import RedBox from "redbox-react";
 
 import { AppContainer } from "./app-container";
-import { App } from "./app";
+import App from "./app";
 
 const render = (Component) => {
   ReactDOM.render(

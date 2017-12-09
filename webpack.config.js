@@ -15,6 +15,7 @@ module.exports = {
             title: "Hot Module Replacement",
             inject: true,
             template: path.resolve(__dirname, "./index.html"),
+            filename: "index.html",
         }),
         new webpack.HotModuleReplacementPlugin(),
     ],
@@ -33,9 +34,14 @@ module.exports = {
     },
     output: {
         filename: "bundle.js",
-        path: path.resolve(__dirname, "build")
+        path: path.resolve(__dirname, "build"),
+        publicPath: '/',
     },
     devServer: {
+        contentBase: path.resolve(__dirname, './client'),
+        publicPath: '/',
+        host: 'localhost',
         port: process.env.WEBPACK_PORT,
+        historyApiFallback: true,
     },
 };

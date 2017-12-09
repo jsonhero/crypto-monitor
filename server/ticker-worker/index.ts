@@ -14,11 +14,14 @@ class TickerRequester {
   endpoint_url: string;
   lastRequestTimestamp: number;
   isRequesting: boolean;
-  constructor(endpoint_url: string) {
+  responseHandler: Function;
+
+  constructor(endpoint_url: string, responseHandler: Function) {
     this.endpoint_url = endpoint_url;
 
     this.isRequesting = false;
     this.lastRequestTimestamp = 0;
+    this.responseHandler = responseHandler;
   }
 
   setRequesting(): void {
@@ -47,15 +50,14 @@ class TickerRequester {
   }
 }
 
-
 class TickerManager {
   requesters: Array<TickerRequester>;
   constructor() {
     this.requesters = [];
   }
 
-  addEndpoint(endpoint_url: string): void {
-    this.requesters.push(new TickerRequester(endpoint_url));
+  addEndpoint(tickerRequester: TickerRequester): void {
+    this.requesters.push(tickerRequester);
   }
 
   removeEndpoint(endpoint_url: string): void {
@@ -120,7 +122,7 @@ class TickerRunner {
     const id = this.openRequest(tickerRequester);
     try {
       const { data } = await axios.get(tickerRequester.getEndpoint());
-      console.log(data, tickerRequester.getEndpoint());
+      tickerRequester.responseHandler(data);
     } catch (e) {
       console.log(e, "Error requesting");
     }
@@ -142,9 +144,17 @@ class TickerRunner {
   }
 }
 
+async function myResponseHandler () {
+
+}
+
+
 async function runner() {
   const tickerManager = new TickerManager();
-  tickerManager.addEndpoint("https://api.gdax.com/products/BTC-USD/ticker");
+  const cb = new TickerRequester("https://api.gdax.com/products/BTC-USD/ticker", async (data: any) => {
+    console.log(data);
+  });
+  tickerManager.addEndpoint(cb);
 
   const tickerRunner = new TickerRunner(tickerManager);
 

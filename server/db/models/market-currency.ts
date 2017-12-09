@@ -24,9 +24,6 @@ export class MarketCurrency extends Model<MarketCurrency> {
   @Column(DataType.INTEGER)
   quote_currency_id: number;
 
-  @Column(DataType.STRING)
-  market_pair: string;
-
   @Column(DataType.DATE)
   created_at: string;
 

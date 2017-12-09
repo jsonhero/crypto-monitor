@@ -45,10 +45,11 @@ var uuid = require("uuid/v1");
 - repeat process
 */
 var TickerRequester = /** @class */ (function () {
-    function TickerRequester(endpoint_url) {
+    function TickerRequester(endpoint_url, responseHandler) {
         this.endpoint_url = endpoint_url;
         this.isRequesting = false;
         this.lastRequestTimestamp = 0;
+        this.responseHandler = responseHandler;
     }
     TickerRequester.prototype.setRequesting = function () {
         this.isRequesting = true;
@@ -75,8 +76,8 @@ var TickerManager = /** @class */ (function () {
     function TickerManager() {
         this.requesters = [];
     }
-    TickerManager.prototype.addEndpoint = function (endpoint_url) {
-        this.requesters.push(new TickerRequester(endpoint_url));
+    TickerManager.prototype.addEndpoint = function (tickerRequester) {
+        this.requesters.push(tickerRequester);
     };
     TickerManager.prototype.removeEndpoint = function (endpoint_url) {
         this.requesters = this.requesters.filter(function (requester) { return requester.getEndpoint() !== endpoint_url; });
@@ -138,7 +139,7 @@ var TickerRunner = /** @class */ (function () {
                         return [4 /*yield*/, axios_1["default"].get(tickerRequester.getEndpoint())];
                     case 2:
                         data = (_a.sent()).data;
-                        console.log(data, tickerRequester.getEndpoint());
+                        tickerRequester.responseHandler(data);
                         return [3 /*break*/, 5];
                     case 3:
                         e_1 = _a.sent();
@@ -168,24 +169,19 @@ var TickerRunner = /** @class */ (function () {
 }());
 function runner() {
     return __awaiter(this, void 0, void 0, function () {
-        var tickerManager, tickerRunner;
+        var _this = this;
+        var tickerManager, cb, tickerRunner;
         return __generator(this, function (_a) {
             tickerManager = new TickerManager();
-            tickerManager.addEndpoint("https://api.gdax.com/products/BTC-USD/ticker");
+            cb = new TickerRequester("https://api.gdax.com/products/BTC-USD/ticker", function (data) { return __awaiter(_this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    console.log(data);
+                    return [2 /*return*/];
+                });
+            }); });
+            tickerManager.addEndpoint(cb);
             tickerRunner = new TickerRunner(tickerManager);
             tickerRunner.start();
-            setTimeout(function () {
-                tickerManager.addEndpoint("https://api.gdax.com/products/ETH-USD/ticker");
-            }, 7000);
-            setTimeout(function () {
-                tickerManager.removeEndpoint("https://api.gdax.com/products/BTC-USD/ticker");
-            }, 14000);
-            setTimeout(function () {
-                tickerManager.removeEndpoint("https://api.gdax.com/products/ETH-USD/ticker");
-            }, 20000);
-            setTimeout(function () {
-                tickerManager.addEndpoint("https://api.gdax.com/products/LTC-USD/ticker");
-            }, 25000);
             return [2 /*return*/];
         });
     });

@@ -16,6 +16,18 @@ export class Market extends Model<Market> {
   @Column(DataType.STRING)
   url: string;
 
+  @Column(DataType.STRING)
+  api_path: string;
+
+  @Column(DataType.TEXT)
+  get api_translation(): object {
+    return JSON.parse(this.getDataValue("api_translation"));
+  }
+  set api_translation(value: object) {
+    console.log(value, "value");
+    this.setDataValue("api_translation", JSON.stringify(value));
+  }
+
   @Column(DataType.DATE)
   created_at: string;
 

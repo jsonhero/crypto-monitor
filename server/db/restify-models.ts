@@ -4,7 +4,7 @@ import { Sequelize } from "sequelize";
 
 
 export default async function restifyModels(sequelize: Sequelize, app: Application) {
-  const { Market, Currency, MarketCurrency } = sequelize.models;
+  const { Market, Currency, MarketCurrency, MarketTicker } = sequelize.models;
 
   epilogue.initialize({
     app,
@@ -22,5 +22,9 @@ export default async function restifyModels(sequelize: Sequelize, app: Applicati
   epilogue.resource({
     model: MarketCurrency,
     endpoints: ["/market-currency", "/market-currency/:id"],
+  });
+  epilogue.resource({
+    model: MarketTicker,
+    endpoints: ["/market-ticker", "/market-ticker/:id"],
   });
 }
