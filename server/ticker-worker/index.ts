@@ -1,5 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosPromise } from "axios";
-import * as uuid from "uuid/v1";
+import * as uuid from "uuid/v4";
+import * as _ from "lodash";
+import dbConnection from "../db/db-connection";
 
  /*
  - Pull all markets from db
@@ -16,7 +18,7 @@ class TickerRequester {
   isRequesting: boolean;
   responseHandler: Function;
 
-  constructor(endpoint_url: string, responseHandler: Function) {
+  constructor(endpoint_url: string, responseHandler: any) {
     this.endpoint_url = endpoint_url;
 
     this.isRequesting = false;
@@ -54,6 +56,10 @@ class TickerManager {
   requesters: Array<TickerRequester>;
   constructor() {
     this.requesters = [];
+  }
+
+  addMultiple(tickerRequesters: Array<TickerRequester>) {
+    this.requesters = [...this.requesters, ...tickerRequesters];
   }
 
   addEndpoint(tickerRequester: TickerRequester): void {
@@ -148,17 +154,71 @@ async function myResponseHandler () {
 
 }
 
+function translationHandler(translation, market_currency_id) {
+  return (data) => {
+    return {
+      market_currency_id,
+      price: _.get(data, translation.price),
+      bid: _.get(data, translation.bid),
+      ask: _.get(data, translation.ask),
+    };
+  };
+}
+
+function tickerInsert(translateData: Function) {
+  return async (data) => {
+    const sequelize = await dbConnection();
+    const { MarketTicker } = sequelize.models;
+    const translatedResponse = translateData(data);
+    console.log(translatedResponse, "rep");
+    // const created = await MarketTicker.create(translatedResponse);
+    // console.log(created, "CREATeD");
+  };
+}
+
+async function getMarketCurrencies() {
+  const requesters = [];
+
+  const sequelize = await dbConnection();
+  const { Currency, Market } = sequelize.models;
+  const markets = await Market.findAll();
+  for (let i = 0; i < markets.length; i++) {
+    const market = markets[i];
+    const currencies = await market.getCurrencies({
+      include: [
+        { model: Currency, as: "quoteCurrency" },
+        { model: Currency, as: "baseCurrency" },
+      ],
+    });
+    const market_api_path = market.get("api_path");
+    for (let c = 0; c < currencies.length; c++) {
+      const currency = currencies[c];
+      const quote: string = currency.quoteCurrency.get("currency_name");
+      const base: string = currency.baseCurrency.get("currency_name");
+      const currencyRequestUrl: string = market_api_path.replace(/(@{base})|(@{quote})/gi, function(matched) {
+        if (matched === "@{base}") {
+          return base;
+        } else if (matched === "@{quote}") {
+          return quote;
+        }
+      });
+      const translationData = translationHandler(market.get("api_translation"), currency.get("id"));
+      const responseHandler = tickerInsert(translationData);
+      const tickerRequester = new TickerRequester(currencyRequestUrl, responseHandler);
+      requesters.push(tickerRequester);
+    }
+  }
+  return requesters;
+}
+
 
 async function runner() {
   const tickerManager = new TickerManager();
-  const cb = new TickerRequester("https://api.gdax.com/products/BTC-USD/ticker", async (data: any) => {
-    console.log(data);
-  });
-  tickerManager.addEndpoint(cb);
-
+  const requesters = await getMarketCurrencies();
+  tickerManager.addMultiple(requesters);
   const tickerRunner = new TickerRunner(tickerManager);
 
   tickerRunner.start();
 }
 
-runner();
+export default runner;

@@ -6,6 +6,7 @@ import * as cors from "cors";
 
 import restifyModels from "./db/restify-models";
 import dbConnection from "./db/db-connection";
+import tickRunner from "./ticker-worker";
 
 async function runServer() {
   const sequelize = await dbConnection();
@@ -27,6 +28,8 @@ async function runServer() {
   });
 
   await restifyModels(sequelize, app);
+
+  tickRunner();
 
   const server = http.createServer(app);
 

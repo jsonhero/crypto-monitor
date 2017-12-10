@@ -1,9 +1,10 @@
-import { Table, Column, Model, DataType, HasMany, AutoIncrement, PrimaryKey, ForeignKey } from "sequelize-typescript";
+import { Table, Column, Model, DataType, HasMany, AutoIncrement, PrimaryKey, ForeignKey, BelongsTo } from "sequelize-typescript";
 import { Currency } from "./currency";
 import { Market } from "./market";
 
 @Table({
   tableName: "market_currency",
+  underscored: true,
 })
 export class MarketCurrency extends Model<MarketCurrency> {
 
@@ -12,13 +13,23 @@ export class MarketCurrency extends Model<MarketCurrency> {
   @Column(DataType.INTEGER)
   id: number;
 
+  @BelongsTo(() => Market)
+  market: Market;
+
   @ForeignKey(() => Market)
   @Column(DataType.INTEGER)
   market_id: number;
 
+
+  @BelongsTo(() => Currency, "base_currency_id")
+  baseCurrency: Currency;
+
   @ForeignKey(() => Currency)
   @Column(DataType.INTEGER)
   base_currency_id: number;
+
+  @BelongsTo(() => Currency, "quote_currency_id")
+  quoteCurrency: Currency;
 
   @ForeignKey(() => Currency)
   @Column(DataType.INTEGER)
